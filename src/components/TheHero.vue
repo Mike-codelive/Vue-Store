@@ -54,10 +54,11 @@ const startTextAnimation = () => {
 
   gsap.fromTo(
     ".word",
-    { y: "100%", opacity: 0 },
+    { y: "100%", opacity: 0, rotate: 10 },
     {
       y: "0%",
       opacity: 1,
+      rotate: 0,
       duration: 1.2,
       ease: "circ.out",
       stagger: 0.1,
