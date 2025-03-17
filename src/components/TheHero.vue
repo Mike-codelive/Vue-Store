@@ -14,8 +14,10 @@
             />
           </div>
           <div class="absolute w-full h-full flex flex-col justify-end p-[4vw]">
-            <h1 class="main_text">Crafted with Passion,</h1>
-            <h1 class="main_text">Built to Last</h1>
+            <h1 class="main_text text-5xl md:text-[7.5vw]">
+              Crafted with Passion,
+            </h1>
+            <h1 class="main_text text-5xl md:text-[7.5vw]">Built to Last</h1>
           </div>
         </div>
       </div>
@@ -75,7 +77,6 @@ onMounted(() => {
 
 <style scoped>
 .main_text {
-  font-size: 8vw;
   font-weight: bold;
   color: white;
   display: flex;
@@ -83,6 +84,7 @@ onMounted(() => {
   gap: 0.5rem;
   overflow: hidden;
   opacity: 0;
+  text-transform: uppercase;
 }
 
 .word {

@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+:root {
+  --curve: cubic-bezier(0.28, 0.71, 0, 0.98);
+  --main-blue: #007aff;
+}
