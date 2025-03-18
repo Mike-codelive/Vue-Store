@@ -2,15 +2,15 @@
   <section>
     <header>
       <nav class="fixed top-0 left-0 z-50 py-[30px] px-[4vw] w-full">
-        <ul class="flex justify-between">
-          <li>Logo</li>
+        <ul class="flex justify-between items-center">
+          <li class="logo_brand"><RouterLink to="/">Furnishé</RouterLink></li>
           <div class="flex gap-[2rem]">
             <li
               v-for="link in linkList"
-              :key="link"
+              :key="link.path"
               class="cursor-pointer capitalize hidden md:block text-white font-[1.2rem]"
             >
-              {{ link }}
+              <RouterLink :to="link.path">{{ link.name }}</RouterLink>
             </li>
             <ShoppingCart class="custom_icon" />
             <Search class="custom_icon" />
@@ -28,17 +28,19 @@
               class="opacity-0 h-full flex flex-col"
               v-show="isMenuOpen"
             >
-              <div class="flex justify-between mb-40">
-                <li>Logo</li>
-                <X @click="toggleMenu" />
+              <div class="flex justify-between items-center mb-40">
+                <li class="logo_brand">
+                  <RouterLink to="/">Furnishé</RouterLink>
+                </li>
+                <X @click="toggleMenu" :size="35" />
               </div>
               <div>
                 <li
                   v-for="link in linkList"
-                  :key="link"
-                  class="text-[5vh] z-40 uppercase mb-[1rem]"
+                  :key="link.path"
+                  class="text-[3.5vh] z-40 uppercase mb-[1rem]"
                 >
-                  {{ link }}
+                  <RouterLink :to="link.path">{{ link.name }}</RouterLink>
                 </li>
               </div>
               <div class="mt-auto">
@@ -71,7 +73,11 @@ import {
   Github,
 } from "lucide-vue-next";
 const isMenuOpen = ref(false);
-const linkList = ["furniture", "about", "contact"];
+const linkList = [
+  { name: "store", path: "/store" },
+  { name: "about", path: "/about" },
+  { name: "contact", path: "/contact" },
+];
 
 const toggleMenu = () => {
   const navMenu = document.querySelector("#mobile_menu");
@@ -101,6 +107,12 @@ const toggleMenu = () => {
 </script>
 
 <style scoped>
+.logo_brand {
+  color: white;
+  font-size: 2.5rem;
+  text-transform: capitalize;
+}
+
 #mobile_menu.open::before {
   transform: translate(-50%, -50%) scale(1);
 }
