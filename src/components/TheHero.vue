@@ -6,6 +6,7 @@
           <page-load v-if="isDesktop" @animationComplete="startTextAnimation" />
           <div class="absolute w-full h-full">
             <img
+              id="main_img"
               ref="heroImage"
               class="w-full h-full object-cover"
               src="/main-hero.webp"
@@ -20,6 +21,7 @@
             <h1 class="main_text text-5xl md:text-[7.5vw]">Built to Last</h1>
           </div>
         </div>
+        <the-best-seller />
       </div>
     </section>
   </main>
@@ -27,6 +29,7 @@
 
 <script lang="ts" setup>
 import PageLoad from "@/components/PageLoad.vue";
+import TheBestSeller from "@/components/TheBestSeller.vue";
 import { ref, onMounted } from "vue";
 import gsap from "gsap";
 

@@ -4,3 +4,7 @@
   --curve: cubic-bezier(0.28, 0.71, 0, 0.98);
   --main-blue: #007aff;
 }
+
+@theme {
+  --breakpoint-4k: 3800px;
+}
