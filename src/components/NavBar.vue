@@ -3,18 +3,26 @@
     <header>
       <nav class="fixed top-0 left-0 z-50 py-[30px] px-[4vw] w-full">
         <ul class="flex justify-between items-center">
-          <li class="logo_brand"><RouterLink to="/">Furnishé</RouterLink></li>
+          <li class="logo_brand">
+            <RouterLink to="/" data-testid="desktop-logo">Furnishé</RouterLink>
+          </li>
           <div class="flex gap-[2rem]">
             <li
               v-for="link in linkList"
               :key="link.path"
               class="cursor-pointer capitalize hidden md:block text-white font-[1.2rem]"
             >
-              <RouterLink :to="link.path">{{ link.name }}</RouterLink>
+              <RouterLink data-testid="nav-link" :to="link.path">{{
+                link.name
+              }}</RouterLink>
             </li>
             <ShoppingCart class="custom_icon" />
             <Search class="custom_icon" />
-            <MenuIcon class="custom_icon block md:hidden" @click="toggleMenu" />
+            <MenuIcon
+              class="custom_icon block md:hidden"
+              @click="toggleMenu"
+              data-testid="menu-icon"
+            />
           </div>
         </ul>
 
@@ -30,9 +38,15 @@
             >
               <div class="flex justify-between items-center mb-40">
                 <li class="logo_brand">
-                  <RouterLink to="/">Furnishé</RouterLink>
+                  <RouterLink to="/" data-testid="mobile-logo"
+                    >Furnishé</RouterLink
+                  >
                 </li>
-                <X @click="toggleMenu" :size="35" />
+                <X
+                  @click="toggleMenu"
+                  :size="35"
+                  data-testid="close-menu-icon"
+                />
               </div>
               <div>
                 <li
@@ -40,7 +54,9 @@
                   :key="link.path"
                   class="text-[3.5vh] z-40 uppercase mb-[1rem]"
                 >
-                  <RouterLink :to="link.path">{{ link.name }}</RouterLink>
+                  <RouterLink data-testid="mobile-nav-link" :to="link.path">{{
+                    link.name
+                  }}</RouterLink>
                 </li>
               </div>
               <div class="mt-auto">
