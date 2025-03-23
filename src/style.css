@@ -3,8 +3,25 @@
 :root {
   --curve: cubic-bezier(0.28, 0.71, 0, 0.98);
   --main-blue: #007aff;
+  --bg-baige: #f8f8f2;
 }
 
 @theme {
   --breakpoint-4k: 3800px;
+}
+
+.animated_text {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.animated_word {
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
+  transform: translateY(100%);
+  opacity: 0;
 }

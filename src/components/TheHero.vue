@@ -14,11 +14,19 @@
               @load="onImageLoad"
             />
           </div>
-          <div class="absolute w-full h-full flex flex-col justify-end p-[4vw]">
-            <h1 class="main_text text-5xl md:text-[7.5vw]">
+          <div
+            class="absolute w-full h-full flex flex-col justify-end p-[4vw] text-white"
+          >
+            <h1
+              class="animated_text text-5xl font-bold md:text-[7.5vw] uppercase"
+            >
               Crafted with Passion,
             </h1>
-            <h1 class="main_text text-5xl md:text-[7.5vw]">Built to Last</h1>
+            <h1
+              class="animated_text text-5xl font-bold md:text-[7.5vw] uppercase"
+            >
+              Built to Last
+            </h1>
           </div>
         </div>
         <the-best-seller />
@@ -30,8 +38,8 @@
 <script lang="ts" setup>
 import PageLoad from "@/components/PageLoad.vue";
 import TheBestSeller from "@/components/TheBestSeller.vue";
+import { startTextAnimation } from "@/utils/animatedText.ts";
 import { ref, onMounted } from "vue";
-import gsap from "gsap";
 
 const heroImage = ref<HTMLImageElement | null>(null);
 const isImageLoaded = ref(false);
@@ -41,60 +49,9 @@ const onImageLoad = () => {
   isImageLoaded.value = true;
 };
 
-const startTextAnimation = () => {
-  const texts = document.querySelectorAll(".main_text");
-  if (texts.length === 0) return;
-
-  texts.forEach((text) => {
-    text.innerHTML =
-      text.textContent
-        ?.split(" ")
-        .map((word) => `<span class="word">${word}</span>`)
-        .join(" ") || "";
-  });
-
-  gsap.to(".main_text", {
-    opacity: 1,
-  });
-
-  gsap.fromTo(
-    ".word",
-    { y: "100%", opacity: 0, rotate: 10 },
-    {
-      y: "0%",
-      opacity: 1,
-      rotate: 0,
-      duration: 1.2,
-      ease: "circ.out",
-      stagger: 0.1,
-    }
-  );
-};
-
 onMounted(() => {
   if (!isDesktop.value) {
     startTextAnimation();
   }
 });
 </script>
-
-<style scoped>
-.main_text {
-  font-weight: bold;
-  color: white;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  overflow: hidden;
-  opacity: 0;
-  text-transform: uppercase;
-}
-
-.word {
-  display: inline-block;
-  overflow: hidden;
-  position: relative;
-  transform: translateY(100%);
-  opacity: 0;
-}
-</style>

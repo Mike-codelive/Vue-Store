@@ -68,29 +68,14 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
-import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
+import { animateTextOnScroll } from "@/utils/animatedText.ts";
 
 const heading = ref<HTMLElement | null>(null);
 const paragraph = ref<HTMLElement | null>(null);
 
 onMounted(() => {
-  if (heading.value && paragraph.value) {
-    gsap.from([heading.value, paragraph.value], {
-      opacity: 0,
-      y: 50,
-      duration: 1.2,
-      ease: "power2.out",
-      stagger: 0.3,
-      scrollTrigger: {
-        trigger: heading.value,
-        start: "top 80%",
-        toggleActions: "play none none none",
-      },
-    });
-  }
+  animateTextOnScroll([heading.value, paragraph.value]);
 });
 </script>
 
