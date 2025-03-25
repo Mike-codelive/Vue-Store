@@ -1,7 +1,7 @@
 <template>
   <section>
     <page-load />
-    <div class="h-full w-full flex flex-wrap bg-[var(--bg-baige)]">
+    <div class="min-h-screen w-full flex flex-wrap bg-[var(--bg-baige)]">
       <div class="pt-[140px] pb-[50px] px-[4vw]">
         <h1
           class="text-[3rem] md:text-[6rem] uppercase font-extrabold mb-[2rem] text-sky-500"
@@ -26,6 +26,7 @@
           </p>
         </div>
       </div>
+      <newsletter />
     </div>
   </section>
 </template>
@@ -33,6 +34,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import PageLoad from "@/components/PageLoad.vue";
+import Newsletter from "@/components/Newsletter.vue";
 import { animateTextOnScroll } from "@/utils/animatedText.ts";
 
 const heading = ref<HTMLElement | null>(null);

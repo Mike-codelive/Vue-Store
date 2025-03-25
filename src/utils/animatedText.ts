@@ -1,5 +1,8 @@
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import type { AnimationOptions } from "@/types/animation";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const startTextAnimation = () => {
   const texts = document.querySelectorAll(".animated_text");
@@ -32,20 +35,42 @@ export const startTextAnimation = () => {
 };
 
 export const animateTextOnScroll = (elements: (HTMLElement | null)[]) => {
-  if (elements.some((el) => el === null)) return;
+  const validElements = elements.filter((el): el is HTMLElement => el !== null);
+  if (validElements.length === 0) {
+    console.warn("No valid elements for animation");
+    return;
+  }
 
-  gsap.registerPlugin(ScrollTrigger);
-
-  gsap.from(elements, {
+  gsap.from(validElements, {
     opacity: 0,
     y: 50,
     duration: 1.2,
     ease: "power2.out",
     stagger: 0.3,
     scrollTrigger: {
-      trigger: elements[0],
+      trigger: validElements[0], // Make sure this element exists
       start: "top 80%",
       toggleActions: "play none none none",
     },
   });
+
+  console.log("Animation triggered on:", validElements);
 };
+// export const animateTextOnScroll = (elements: (HTMLElement | null)[]) => {
+//   if (elements.some((el) => el === null)) return;
+
+//   gsap.registerPlugin(ScrollTrigger);
+
+//   gsap.from(elements, {
+//     opacity: 0,
+//     y: 50,
+//     duration: 1.2,
+//     ease: "power2.out",
+//     stagger: 0.3,
+//     scrollTrigger: {
+//       trigger: elements[0],
+//       start: "top 80%",
+//       toggleActions: "play none none none",
+//     },
+//   });
+// };

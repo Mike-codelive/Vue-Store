@@ -68,7 +68,6 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
-import ScrollTrigger from "gsap/ScrollTrigger";
 import { animateTextOnScroll } from "@/utils/animatedText.ts";
 
 const heading = ref<HTMLElement | null>(null);
