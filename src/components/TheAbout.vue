@@ -151,7 +151,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, onUnmounted } from "vue";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PageLoad from "@/components/PageLoad.vue";
@@ -184,6 +184,10 @@ onMounted(() => {
       },
     });
   }
+});
+
+onUnmounted(() => {
+  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 });
 </script>
 
