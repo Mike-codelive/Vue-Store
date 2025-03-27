@@ -1,7 +1,7 @@
 <template>
   <section class="py-[50px] w-full px-[4vw] bg-[var(--bg-baige)]">
     <div
-      class="p-[2rem] w-[60%] rounded-[2rem] mx-auto my-0 bg-[var(--main-blue)]"
+      class="p-[2rem] w-full md:w-[60%] rounded-[2rem] mx-auto my-0 bg-[var(--main-blue)]"
     >
       <h2
         ref="heading"

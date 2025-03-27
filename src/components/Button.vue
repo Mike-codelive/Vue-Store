@@ -39,13 +39,18 @@ class Button {
 
   init() {
     const el = gsap.utils.selector(this.block);
+    const flairElements = el(".button__flair") as HTMLElement[];
     this.DOM = {
       button: this.block,
-      flair: el(".button__flair"),
+      flair: flairElements[0],
     };
 
-    this.xSet = gsap.quickSetter(this.DOM.flair, "xPercent");
-    this.ySet = gsap.quickSetter(this.DOM.flair, "yPercent");
+    this.xSet = gsap.quickSetter(this.DOM.flair, "xPercent") as (
+      value: number
+    ) => void;
+    this.ySet = gsap.quickSetter(this.DOM.flair, "yPercent") as (
+      value: number
+    ) => void;
   }
 
   getXY(e: MouseEvent): { x: number; y: number } {

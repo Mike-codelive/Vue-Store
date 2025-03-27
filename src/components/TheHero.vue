@@ -9,7 +9,7 @@
               id="main_img"
               ref="heroImage"
               class="w-full h-full object-cover"
-              src="/main-hero.webp"
+              src="/main-hero.jpg"
               alt="Main store image"
               @load="onImageLoad"
             />
