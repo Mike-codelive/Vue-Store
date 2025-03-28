@@ -1,16 +1,21 @@
 <template>
   <section>
     <header>
-      <nav class="fixed top-0 left-0 z-50 py-[30px] px-[4vw] w-full">
-        <ul class="flex justify-between items-center">
+      <nav
+        :class="[
+          'fixed top-0 left-0 z-40 px-[4vw] w-full transition-colors duration-300 h-[100px]',
+          { 'bg-[var(--main-blue)]': shouldHaveBlueBackground },
+        ]"
+      >
+        <ul class="flex justify-between items-center h-full">
           <li class="logo_brand">
             <RouterLink to="/" data-testid="desktop-logo">Furnishé</RouterLink>
           </li>
-          <div class="flex gap-[2rem]">
+          <div class="flex gap-[2rem] items-center">
             <li
               v-for="link in linkList"
               :key="link.path"
-              class="cursor-pointer capitalize hidden md:block text-white font-[1.2rem]"
+              class="cursor-pointer capitalize hidden md:block text-white text-[1.2rem]"
             >
               <RouterLink data-testid="nav-link" :to="link.path">{{
                 link.name
@@ -48,7 +53,7 @@
                   data-testid="close-menu-icon"
                 />
               </div>
-              <div>
+              <div class="flex flex-col items-center justify-center flex-1">
                 <li
                   v-for="link in linkList"
                   :key="link.path"
@@ -59,7 +64,7 @@
                   }}</RouterLink>
                 </li>
               </div>
-              <div class="mt-auto">
+              <div class="mt-auto flex justify-center">
                 <ul class="flex gap-[1rem]">
                   <li><Instagram /></li>
                   <li><Facebook /></li>
@@ -76,7 +81,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useRoute } from "vue-router";
 import gsap from "gsap";
 import {
   ShoppingCart,
@@ -88,12 +94,24 @@ import {
   Youtube,
   Github,
 } from "lucide-vue-next";
+import { useNavbarStore } from "@/stores/navbar";
+
+const route = useRoute();
+const navbarStore = useNavbarStore();
 const isMenuOpen = ref(false);
 const linkList = [
   { name: "store", path: "/store" },
   { name: "about", path: "/about" },
   { name: "contact", path: "/contact" },
 ];
+
+const blueBackgroundRoutes = ["/about", "/store", "/contact"];
+
+const shouldHaveBlueBackground = computed(() => {
+  return (
+    blueBackgroundRoutes.includes(route.path) || navbarStore.isScrolledPastHero
+  );
+});
 
 const toggleMenu = () => {
   const navMenu = document.querySelector("#mobile_menu");

@@ -51,7 +51,7 @@ onMounted(() => {
   height: auto;
   position: fixed;
   left: 0;
-  z-index: 30;
+  z-index: 100;
   pointer-events: none;
   fill: #fff;
 }

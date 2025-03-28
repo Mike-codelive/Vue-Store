@@ -40,10 +40,13 @@ import PageLoad from "@/components/PageLoad.vue";
 import TheBestSeller from "@/components/TheBestSeller.vue";
 import { startTextAnimation } from "@/utils/animatedText.ts";
 import { ref, onMounted } from "vue";
+import { useNavbarStore } from "@/stores/navbar";
+import ScrollTrigger from "gsap/ScrollTrigger";
 
 const heroImage = ref<HTMLImageElement | null>(null);
 const isImageLoaded = ref(false);
 const isDesktop = ref(window.innerWidth >= 768);
+const navbarStore = useNavbarStore();
 
 const onImageLoad = () => {
   isImageLoaded.value = true;
@@ -52,6 +55,34 @@ const onImageLoad = () => {
 onMounted(() => {
   if (!isDesktop.value) {
     startTextAnimation();
+  }
+  if (heroImage.value) {
+    const isPastHero =
+      window.scrollY > heroImage.value.getBoundingClientRect().bottom;
+    navbarStore.setScrolledPastHero(isPastHero);
+
+    ScrollTrigger.create({
+      trigger: heroImage.value,
+      start: "top top",
+      end: "bottom top",
+      onEnter: () => {
+        navbarStore.setScrolledPastHero(false);
+      },
+      onLeave: () => {
+        navbarStore.setScrolledPastHero(true);
+      },
+      onEnterBack: () => {
+        navbarStore.setScrolledPastHero(false);
+      },
+      onLeaveBack: () => {},
+    });
+
+    const handleScroll = () => {
+      if (window.scrollY === 0) {
+        navbarStore.setScrolledPastHero(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
   }
 });
 </script>

@@ -67,7 +67,7 @@
           </div>
         </div>
         <div
-          class="progress_element flex justify-between items-center flex-col w-[80%] md:w-full md:flex-row"
+          class="progress_element flex justify-between items-center flex-col w-[80%] md:w-full md:flex-row-reverse"
         >
           <div class="basis-[45%] mb-[3rem] md:mb-0">
             <h2 class="uppercase font-bold mb-[1.5rem] text-[1.5rem]">
