@@ -62,19 +62,127 @@
           </span>
         </div>
       </div>
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[1200px] px-[4vw]"
+      >
+        <div
+          v-if="productsStore.isLoading"
+          class="text-center text-[var(--main-blue)] text-[1.5rem]"
+        >
+          Loading...
+        </div>
+        <div
+          v-else-if="productsStore.error"
+          class="text-center text-red-500 text-[1.5rem]"
+        >
+          {{ productsStore.error }}
+        </div>
+        <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-[2rem]">
+          <div
+            v-for="product in displayedFeaturedProducts"
+            :key="product.id"
+            class="product-card bg-white rounded-lg shadow-lg overflow-hidden"
+          >
+            <img
+              :src="product.image"
+              :alt="product.name"
+              class="w-full h-[200px] object-cover"
+            />
+            <div class="p-4">
+              <h3
+                class="text-[1.25rem] font-bold text-[var(--main-blue)] uppercase mb-[1rem]"
+              >
+                {{ product.name }}
+              </h3>
+              <div class="flex justify-between items-center mb-[.5rem]">
+                <p class="text-[1rem] text-gray-600">
+                  {{ formatPrice(product.price) }}
+                </p>
+                <div class="counter flex items-center gap-2">
+                  <button
+                    @click="decrement(product.id)"
+                    class="counter-btn bg-gray-200 text-[var(--main-blue)] hover:bg-gray-300 rounded-full"
+                    :disabled="counters[product.id] === 1"
+                    aria-label="Decrement quantity"
+                  >
+                    <Minus />
+                  </button>
+                  <span
+                    class="text-[1rem] font-semibold text-[var(--main-blue)] w-[1.5rem] text-center"
+                  >
+                    {{ counters[product.id] }}
+                  </span>
+                  <button
+                    @click="increment(product.id)"
+                    class="counter-btn bg-gray-200 text-[var(--main-blue)] hover:bg-gray-300 rounded-full"
+                    aria-label="Increment quantity"
+                  >
+                    <Plus />
+                  </button>
+                </div>
+              </div>
+              <div class="text-center">
+                <Button
+                  text="Add To Cart"
+                  text-color="black"
+                  flair-color="var(--main-blue)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   </section>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
-import { animateTextOnScroll } from "@/utils/animatedText.ts";
+import { onMounted, ref, computed, reactive, watch } from "vue";
+import { animateTextOnScroll } from "@/utils/animatedText";
+import { useProductsStore } from "@/stores/products";
+import { Plus, Minus } from "lucide-vue-next";
+import Button from "@/components/Button.vue";
+import type { Product } from "@/types/product";
 
 const heading = ref<HTMLElement | null>(null);
 const paragraph = ref<HTMLElement | null>(null);
 
+const productsStore = useProductsStore();
+
+const displayedFeaturedProducts = computed<Product[]>(() => {
+  return productsStore.featuredProducts.slice(0, 3);
+});
+
+const formatPrice = (price: number): string => {
+  return `$${(price / 100).toFixed(2)}`;
+};
+
+const counters = reactive<Record<string, number>>({});
+
+watch(displayedFeaturedProducts, (newProducts) => {
+  newProducts.forEach((product) => {
+    if (!(product.id in counters)) {
+      counters[product.id] = 1;
+    }
+  });
+});
+
+const increment = (productId: string): void => {
+  counters[productId]++;
+};
+
+const decrement = (productId: string): void => {
+  if (counters[productId] > 1) {
+    counters[productId]--;
+  }
+};
+
 onMounted(() => {
   animateTextOnScroll([heading.value, paragraph.value]);
+
+  if (!productsStore.products.length) {
+    productsStore.fetchProducts();
+  }
 });
 </script>
 
@@ -93,6 +201,7 @@ onMounted(() => {
   left: 50%;
   transform-origin: center;
   transform: translate(-50%, -50%) rotate(-10deg);
+  user-select: none;
 }
 
 .reverse {
@@ -118,5 +227,22 @@ onMounted(() => {
   100% {
     transform: translate(-50%);
   }
+}
+
+.counter-btn {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.counter-btn:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
 }
 </style>

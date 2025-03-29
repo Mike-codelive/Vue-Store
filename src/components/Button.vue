@@ -1,21 +1,40 @@
 <template>
-  <button ref="button" class="button button--stroke">
+  <button
+    ref="button"
+    class="button button--stroke"
+    :style="buttonStyles"
+    @click="$emit('click', $event)"
+  >
     <span class="button__flair"></span>
     <span class="button__label">{{ text }}</span>
   </button>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, nextTick } from "vue";
+import { onMounted, ref, nextTick, computed } from "vue";
 import { gsap } from "gsap";
 
 interface Props {
   text?: string;
+  bgColor?: string;
+  borderColor?: string;
+  textColor?: string;
+  hoverTextColor?: string;
+  flairColor?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   text: "My content",
+  bgColor: "transparent",
+  borderColor: "white",
+  textColor: "white",
+  hoverTextColor: "black",
+  flairColor: "white",
 });
+
+defineEmits<{
+  (e: "click", event: MouseEvent): void;
+}>();
 
 const button = ref<HTMLElement | null>(null);
 
@@ -120,19 +139,26 @@ onMounted(async () => {
     new Button(button.value);
   }
 });
+
+const buttonStyles = computed(() => ({
+  "--bg-color": props.bgColor,
+  "--border-color": props.borderColor,
+  "--text-color": props.textColor,
+  "--hover-text-color": props.hoverTextColor,
+  "--flair-color": props.flairColor,
+}));
 </script>
 
 <style scoped>
 button {
-  color: currentColor;
+  color: var(--text-color, currentColor);
 }
 
 .button {
   align-items: center;
-  background: 0 0;
+  background: var(--bg-color, transparent);
   border: none;
   border-radius: 6.25rem;
-  color: white;
   cursor: pointer;
   display: inline-flex;
   font-size: 1.2rem;
@@ -151,7 +177,7 @@ button {
 
 @media (hover: hover) {
   .button.button--stroke:hover {
-    color: black;
+    color: var(--hover-text-color, black);
     text-decoration: none;
   }
 }
@@ -165,7 +191,7 @@ button {
 }
 
 .button--stroke:after {
-  border: 0.125rem solid white;
+  border: 0.125rem solid var(--border-color, white);
   border-radius: 6.25rem;
   content: "";
   pointer-events: none;
@@ -198,7 +224,7 @@ button {
 
 .button__flair:before {
   aspect-ratio: 1/1;
-  background-color: white;
+  background-color: var(--flair-color, white);
   border-radius: 50%;
   content: "";
   display: block;
