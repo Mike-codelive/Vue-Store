@@ -30,6 +30,8 @@
           </div>
         </div>
         <the-best-seller />
+        <arches />
+        <newsletter />
       </div>
     </section>
   </main>
@@ -38,6 +40,8 @@
 <script lang="ts" setup>
 import PageLoad from "@/components/PageLoad.vue";
 import TheBestSeller from "@/components/TheBestSeller.vue";
+import Arches from "@/components/Arches.vue";
+import Newsletter from "@/components/Newsletter.vue";
 import { startTextAnimation } from "@/utils/animatedText.ts";
 import { ref, onMounted } from "vue";
 import { useNavbarStore } from "@/stores/navbar";

@@ -19,7 +19,7 @@
         every style and space.
       </p>
     </div>
-    <section class="relative overflow-hidden min-h-[115vh] 2xl:min-h-[132vh]">
+    <section class="relative overflow-hidden min-h-[125vh] 2xl:min-h-[132vh]">
       <div class="Collection_Display_Back">
         <div class="Marquee_Content reverse">
           <span
@@ -101,7 +101,7 @@
                 <div class="counter flex items-center gap-2">
                   <button
                     @click="decrement(product.id)"
-                    class="counter-btn bg-gray-200 text-[var(--main-blue)] hover:bg-gray-300 rounded-full"
+                    class="counter-btn bg-gray-200 text-[var(--main-blue)] hover:bg-gray-300 rounded-full cursor-pointer"
                     :disabled="counters[product.id] === 1"
                     aria-label="Decrement quantity"
                   >
@@ -114,7 +114,7 @@
                   </span>
                   <button
                     @click="increment(product.id)"
-                    class="counter-btn bg-gray-200 text-[var(--main-blue)] hover:bg-gray-300 rounded-full"
+                    class="counter-btn bg-gray-200 text-[var(--main-blue)] hover:bg-gray-300 rounded-full cursor-pointer"
                     aria-label="Increment quantity"
                   >
                     <Plus />
@@ -125,7 +125,9 @@
                 <Button
                   text="Add To Cart"
                   text-color="black"
-                  flair-color="var(--main-blue)"
+                  flair-color="white"
+                  border-color="var(--main-blue)"
+                  bg-color="var(--main-blue)"
                 />
               </div>
             </div>
@@ -217,7 +219,7 @@ onMounted(() => {
   display: flex;
   flex-wrap: nowrap;
   animation: MarqueeScroll 20s infinite 0s linear;
-  animation-duration: 65s;
+  animation-duration: 35s;
 }
 
 @keyframes MarqueeScroll {
