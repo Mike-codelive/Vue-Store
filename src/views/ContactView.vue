@@ -1,7 +1,7 @@
 <template>
-  <the-contact />
+  <contact />
 </template>
 
 <script lang="ts" setup>
-import TheContact from "@/components/TheContact.vue";
+import Contact from "@/components/Contact.vue";
 </script>
