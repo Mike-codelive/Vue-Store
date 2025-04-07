@@ -26,3 +26,7 @@
   transform: translateY(100%);
   opacity: 0;
 }
+
+.section_padded {
+  padding: 50px 4vw;
+}

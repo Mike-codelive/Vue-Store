@@ -57,13 +57,11 @@
         />
       </div>
     </div>
-    <newsletter />
   </section>
 </template>
 
 <script lang="ts" setup>
 import PageLoad from "@/components/PageLoad.vue";
-import Newsletter from "@/components/Newsletter.vue";
 </script>
 
 <style scoped>

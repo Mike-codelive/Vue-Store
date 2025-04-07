@@ -145,7 +145,6 @@
           ></div>
         </div>
       </div>
-      <newsletter />
     </div>
   </section>
 </template>
@@ -155,7 +154,6 @@ import { onMounted, ref, onUnmounted } from "vue";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PageLoad from "@/components/PageLoad.vue";
-import Newsletter from "@/components/Newsletter.vue";
 import { animateTextOnScroll } from "@/utils/animatedText.ts";
 
 gsap.registerPlugin(ScrollTrigger);
