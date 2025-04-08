@@ -141,6 +141,7 @@
 <script lang="ts" setup>
 import { onMounted, ref, computed, reactive, watch } from "vue";
 import { animateTextOnScroll } from "@/utils/animatedText";
+import { formatPrice } from "@/utils/priceFormat";
 import { useProductsStore } from "@/stores/products";
 import { Plus, Minus } from "lucide-vue-next";
 import Button from "@/components/Button.vue";
@@ -154,10 +155,6 @@ const productsStore = useProductsStore();
 const displayedFeaturedProducts = computed<Product[]>(() => {
   return productsStore.featuredProducts.slice(0, 3);
 });
-
-const formatPrice = (price: number): string => {
-  return `$${(price / 100).toFixed(2)}`;
-};
 
 const counters = reactive<Record<string, number>>({});
 
