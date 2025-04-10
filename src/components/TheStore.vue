@@ -109,6 +109,23 @@
               >
                 {{ product.name }}
               </h3>
+              <div class="flex gap-2 mb-2">
+                <button
+                  v-for="color in Array.isArray(product.colors)
+                    ? product.colors
+                    : [product.colors]"
+                  :key="color"
+                  class="w-6 h-6 rounded-full border-2"
+                  :class="{
+                    'border-gray-400':
+                      selectedProductColors[product.id] !== color,
+                    'border-[var(--main-blue)]':
+                      selectedProductColors[product.id] === color,
+                  }"
+                  :style="{ backgroundColor: color }"
+                  @click="selectProductColor(product.id, color)"
+                ></button>
+              </div>
               <div class="flex justify-between items-center mb-[.5rem]">
                 <p class="text-[1rem] text-gray-600">
                   {{ formatPrice(product.price) }}
@@ -158,7 +175,6 @@
     </div>
   </section>
 </template>
-
 <script lang="ts" setup>
 import { ref, computed, reactive, watch, onMounted } from "vue";
 import { useProductsStore } from "@/stores/products";
@@ -167,19 +183,15 @@ import type { Product } from "@/types/product";
 import { formatPrice } from "@/utils/priceFormat";
 import { Plus, Minus } from "lucide-vue-next";
 import Button from "@/components/Button.vue";
-
 const productsStore = useProductsStore();
-
 onMounted(() => {
   if (!productsStore.products.length) {
     productsStore.fetchProducts();
   }
 });
-
 const displayedAllProducts = computed<Product[]>(() => {
   return productsStore.products;
 });
-
 const availableColors = computed(() => {
   const colors = displayedAllProducts.value
     .flatMap((product) =>
@@ -188,16 +200,13 @@ const availableColors = computed(() => {
     .filter((color): color is string => !!color);
   return [...new Set(colors)];
 });
-
 const availableCategories = computed(() => {
   const categories = displayedAllProducts.value
     .map((product) => product.category)
     .filter((category): category is string => !!category);
   return [...new Set(categories)];
 });
-
 const rawPriceRange = reactive({ min: "", max: "" });
-
 const priceRange = computed({
   get() {
     return {
@@ -212,47 +221,46 @@ const priceRange = computed({
       newValue.max === Infinity ? "" : String(newValue.max / 100);
   },
 });
-
 const selectedColors = ref<string[]>([]);
 const selectedCategory = ref<string>("");
-
 const filteredProducts = computed<Product[]>(() => {
   return displayedAllProducts.value.filter((product) => {
     const withinPriceRange =
       Number(product.price) >= priceRange.value.min &&
       Number(product.price) <= priceRange.value.max;
-
     const matchesColor =
       selectedColors.value.length === 0 ||
       (product.colors &&
         (Array.isArray(product.colors)
           ? product.colors.some((color) => selectedColors.value.includes(color))
           : selectedColors.value.includes(product.colors)));
-
     const matchesCategory =
       !selectedCategory.value ||
       (product.category && product.category === selectedCategory.value);
-
     const passesFilter = withinPriceRange && matchesColor && matchesCategory;
-
     return passesFilter;
   });
 });
-
 const counters = reactive<Record<string, number>>({});
-
+const selectedProductColors = reactive<Record<string, string>>({});
 watch(displayedAllProducts, (newProducts) => {
   newProducts.forEach((product) => {
     if (!(product.id in counters)) {
       counters[product.id] = 1;
     }
+    if (!(product.id in selectedProductColors) && product.colors) {
+      selectedProductColors[product.id] = Array.isArray(product.colors)
+        ? product.colors[0]
+        : product.colors;
+    }
   });
 });
-
+const selectProductColor = (productId: string, color: string) => {
+  selectedProductColors[productId] = color;
+};
 const increment = (productId: string): void => {
   counters[productId]++;
 };
-
 const decrement = (productId: string): void => {
   if (counters[productId] > 1) {
     counters[productId]--;
