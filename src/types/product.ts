@@ -3,7 +3,7 @@ export interface Product {
   name: string;
   price: number;
   image: string;
-  colors: string[];
+  colors: string[] | string;
   company: string;
   description: string;
   category: string;
