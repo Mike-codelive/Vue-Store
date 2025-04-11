@@ -4,6 +4,7 @@ import HomeView from "@/views/HomeView.vue";
 import StoreView from "@/views/StoreView.vue";
 import AboutView from "@/views/AboutView.vue";
 import ContactView from "@/views/ContactView.vue";
+import ProductView from "@/views/ProductView.vue";
 
 const routes = [
   {
@@ -25,6 +26,12 @@ const routes = [
     path: "/contact",
     name: "Contact",
     component: ContactView,
+  },
+  {
+    path: "/product/:id",
+    name: "SingleProduct",
+    component: ProductView,
+    props: true,
   },
 ];
 

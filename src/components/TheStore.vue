@@ -98,17 +98,25 @@
             :key="product.id"
             class="product-card bg-white rounded-lg shadow-lg overflow-hidden"
           >
-            <img
-              :src="product.image"
-              :alt="product.name"
-              class="w-full h-[200px] object-cover"
-            />
+            <router-link
+              :to="{ name: 'SingleProduct', params: { id: product.id } }"
+            >
+              <img
+                :src="product.image"
+                :alt="product.name"
+                class="w-full h-[200px] object-cover"
+              />
+            </router-link>
             <div class="p-4">
-              <h3
-                class="text-[1.25rem] font-bold text-[var(--main-blue)] uppercase mb-[1rem]"
+              <router-link
+                :to="{ name: 'SingleProduct', params: { id: product.id } }"
               >
-                {{ product.name }}
-              </h3>
+                <h3
+                  class="text-[1.25rem] font-bold text-[var(--main-blue)] uppercase mb-[1rem]"
+                >
+                  {{ product.name }}
+                </h3>
+              </router-link>
               <div class="flex gap-2 mb-2">
                 <button
                   v-for="color in Array.isArray(product.colors)
@@ -175,6 +183,7 @@
     </div>
   </section>
 </template>
+
 <script lang="ts" setup>
 import { ref, computed, reactive, watch, onMounted } from "vue";
 import { useProductsStore } from "@/stores/products";
@@ -183,15 +192,19 @@ import type { Product } from "@/types/product";
 import { formatPrice } from "@/utils/priceFormat";
 import { Plus, Minus } from "lucide-vue-next";
 import Button from "@/components/Button.vue";
+
 const productsStore = useProductsStore();
+
 onMounted(() => {
   if (!productsStore.products.length) {
     productsStore.fetchProducts();
   }
 });
+
 const displayedAllProducts = computed<Product[]>(() => {
   return productsStore.products;
 });
+
 const availableColors = computed(() => {
   const colors = displayedAllProducts.value
     .flatMap((product) =>
@@ -200,13 +213,16 @@ const availableColors = computed(() => {
     .filter((color): color is string => !!color);
   return [...new Set(colors)];
 });
+
 const availableCategories = computed(() => {
   const categories = displayedAllProducts.value
     .map((product) => product.category)
     .filter((category): category is string => !!category);
   return [...new Set(categories)];
 });
+
 const rawPriceRange = reactive({ min: "", max: "" });
+
 const priceRange = computed({
   get() {
     return {
@@ -221,28 +237,37 @@ const priceRange = computed({
       newValue.max === Infinity ? "" : String(newValue.max / 100);
   },
 });
+
 const selectedColors = ref<string[]>([]);
 const selectedCategory = ref<string>("");
+
 const filteredProducts = computed<Product[]>(() => {
   return displayedAllProducts.value.filter((product) => {
     const withinPriceRange =
       Number(product.price) >= priceRange.value.min &&
       Number(product.price) <= priceRange.value.max;
+
     const matchesColor =
       selectedColors.value.length === 0 ||
       (product.colors &&
         (Array.isArray(product.colors)
           ? product.colors.some((color) => selectedColors.value.includes(color))
           : selectedColors.value.includes(product.colors)));
+
     const matchesCategory =
       !selectedCategory.value ||
       (product.category && product.category === selectedCategory.value);
+
     const passesFilter = withinPriceRange && matchesColor && matchesCategory;
+
     return passesFilter;
   });
 });
+
 const counters = reactive<Record<string, number>>({});
+
 const selectedProductColors = reactive<Record<string, string>>({});
+
 watch(displayedAllProducts, (newProducts) => {
   newProducts.forEach((product) => {
     if (!(product.id in counters)) {
@@ -255,12 +280,15 @@ watch(displayedAllProducts, (newProducts) => {
     }
   });
 });
+
 const selectProductColor = (productId: string, color: string) => {
   selectedProductColors[productId] = color;
 };
+
 const increment = (productId: string): void => {
   counters[productId]++;
 };
+
 const decrement = (productId: string): void => {
   if (counters[productId] > 1) {
     counters[productId]--;

@@ -105,11 +105,14 @@ const linkList = [
   { name: "contact", path: "/contact" },
 ];
 
-const blueBackgroundRoutes = ["/about", "/store", "/contact"];
+const blueBackgroundRoutes = ["/", "/about", "/store", "/contact", "/product"];
 
 const shouldHaveBlueBackground = computed(() => {
+  const isProductRoute = route.path.startsWith("/product/");
   return (
-    blueBackgroundRoutes.includes(route.path) || navbarStore.isScrolledPastHero
+    blueBackgroundRoutes.includes(route.path) ||
+    isProductRoute ||
+    navbarStore.isScrolledPastHero
   );
 });
 
