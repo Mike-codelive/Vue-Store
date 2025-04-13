@@ -16,7 +16,7 @@
     <div v-else class="flex flex-col lg:flex-row gap-[2rem]">
       <div class="lg:w-1/2 w-full">
         <img
-          :src="product.image"
+          :src="product.images[0].url"
           :alt="product.name"
           class="w-full h-[400px] object-cover rounded-lg"
         />
@@ -108,50 +108,38 @@
     </div>
   </section>
 </template>
-
 <script lang="ts" setup>
-import { computed, ref, onMounted } from "vue";
+import { computed, ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useProductsStore } from "@/stores/products";
 import PageLoad from "@/components/PageLoad.vue";
 import { formatPrice } from "@/utils/priceFormat";
 import { Plus, Minus } from "lucide-vue-next";
 import Button from "@/components/Button.vue";
-
-defineProps<{
-  id: string;
-}>();
-
+defineProps<{ id: string }>();
 const route = useRoute();
 const productsStore = useProductsStore();
-
 const productId = computed(() => route.params.id as string);
-
 const product = computed(() => {
-  return productsStore.products.find((p) => p.id === productId.value);
+  return productsStore.singleProduct;
 });
-
 onMounted(() => {
-  if (!productsStore.products.length) {
-    productsStore.fetchProducts();
+  if (productId.value) {
+    productsStore.fetchSingleProduct(productId.value);
   }
 });
-
 const counter = ref(1);
 const selectedColor = ref<string>("");
-
-onMounted(() => {
-  if (product.value && product.value.colors) {
-    selectedColor.value = Array.isArray(product.value.colors)
-      ? product.value.colors[0]
-      : product.value.colors;
+watch(product, (newProduct) => {
+  if (newProduct && newProduct.colors) {
+    selectedColor.value = Array.isArray(newProduct.colors)
+      ? newProduct.colors[0]
+      : newProduct.colors;
   }
 });
-
 const increment = () => {
   counter.value++;
 };
-
 const decrement = () => {
   if (counter.value > 1) {
     counter.value--;
