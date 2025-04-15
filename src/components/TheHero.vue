@@ -1,9 +1,9 @@
 <template>
+  <page-load v-if="isDesktop" @animationComplete="startTextAnimation" />
   <main>
     <section>
       <div class="w-full h-[75vh] md:h-screen">
         <div class="relative h-full">
-          <page-load v-if="isDesktop" @animationComplete="startTextAnimation" />
           <div class="absolute w-full h-full">
             <img
               id="main_img"

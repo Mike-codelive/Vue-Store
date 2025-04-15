@@ -43,7 +43,10 @@
             >
               <div class="flex justify-between items-center mb-40">
                 <li class="logo_brand">
-                  <RouterLink to="/" data-testid="mobile-logo"
+                  <RouterLink
+                    @click="toggleMenu"
+                    to="/"
+                    data-testid="mobile-logo"
                     >Furnishé</RouterLink
                   >
                 </li>
@@ -59,9 +62,12 @@
                   :key="link.path"
                   class="text-[3.5vh] z-40 uppercase mb-[1rem]"
                 >
-                  <RouterLink data-testid="mobile-nav-link" :to="link.path">{{
-                    link.name
-                  }}</RouterLink>
+                  <RouterLink
+                    @click="toggleMenu"
+                    data-testid="mobile-nav-link"
+                    :to="link.path"
+                    >{{ link.name }}</RouterLink
+                  >
                 </li>
               </div>
               <div class="mt-auto flex justify-center">
