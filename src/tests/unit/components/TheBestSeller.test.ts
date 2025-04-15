@@ -20,7 +20,7 @@ describe("TheBEstSeller component", () => {
         every style and space.
       `);
 
-    const paragraphElement = screen.getByText((content, element) => {
+    const paragraphElement = screen.getByText((_, element) => {
       const normalizedContent = normalizeWhitespace(element?.textContent || "");
       return normalizedContent === expectedParagraph;
     });

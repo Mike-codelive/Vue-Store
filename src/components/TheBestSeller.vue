@@ -23,7 +23,7 @@
       <div class="Collection_Display_Back">
         <div class="Marquee_Content reverse">
           <span
-            v-for="(text, index) in 8"
+            v-for="index in 8"
             :key="index"
             :class="{ inverted: index % 4 === 0 }"
             class="marquee-item font-extrabold text-[var(--main-blue)] text-[8rem] mx-[1rem]"
@@ -33,7 +33,7 @@
         </div>
         <div class="Marquee_Content">
           <span
-            v-for="(text, index) in 8"
+            v-for="index in 8"
             :key="index"
             :class="{ inverted: index % 4 === 0 }"
             class="marquee-item font-extrabold text-[var(--main-blue)] text-[8rem] mx-[1rem]"
@@ -43,7 +43,7 @@
         </div>
         <div class="Marquee_Content reverse">
           <span
-            v-for="(text, index) in 8"
+            v-for="index in 8"
             :key="index"
             :class="{ inverted: index % 4 === 0 }"
             class="marquee-item font-extrabold text-[var(--main-blue)] text-[8rem] mx-[1rem]"
@@ -53,7 +53,7 @@
         </div>
         <div class="Marquee_Content">
           <span
-            v-for="(text, index) in 8"
+            v-for="index in 8"
             :key="index"
             :class="{ inverted: index % 4 === 0 }"
             class="marquee-item font-extrabold text-[var(--main-blue)] text-[8rem] mx-[1rem]"

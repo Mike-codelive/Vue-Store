@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/vue";
+import { render, screen, fireEvent } from "@testing-library/vue";
 import { RouterLinkStub } from "@vue/test-utils";
 import NavBar from "@/components/NavBar.vue";
 import { createRouter, createWebHistory } from "vue-router";

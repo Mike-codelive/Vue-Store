@@ -10,9 +10,10 @@
     "test:unit": "vitest --environment jsdom --ui"
   },
   "dependencies": {
+    "@heroicons/vue": "^2.2.0",
     "@tailwindcss/vite": "^4.0.17",
     "gsap": "^3.12.7",
-    "lucide-vue-next": "^0.482.0",
+    "lucide-vue-next": "^0.488.0",
     "pinia": "^3.0.1",
     "tailwindcss": "^4.0.17",
     "vue-router": "^4.5.0"

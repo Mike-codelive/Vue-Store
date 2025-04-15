@@ -173,7 +173,7 @@ onMounted(() => {
       start: "top top",
       end: "bottom bottom",
       scrub: true,
-      onUpdate: (self) => {
+      onUpdate: () => {
         const pageHeight =
           document.documentElement.scrollHeight - window.innerHeight;
         const scrollY = window.scrollY;
