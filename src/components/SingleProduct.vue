@@ -39,6 +39,13 @@
         <p class="text-[1rem] 4k:text-[2rem] text-gray-600 mb-2">
           <strong>Company:</strong> {{ product.company }}
         </p>
+        <p class="text-[1rem] 4k:text-[2rem] text-gray-600 mb-2">
+          <strong>Stock:</strong> {{ product.stock }}
+        </p>
+        <p class="text-[1rem] 4k:text-[2rem] text-gray-600 mb-2">
+          <strong>Rating:</strong> {{ product.stars }} ({{ product.reviews }}
+          reviews)
+        </p>
         <p class="text-[1rem] 4k:text-[2rem] text-gray-600 mb-4">
           <strong>Shipping:</strong>
           {{ product.shipping ? "Free Shipping" : "Shipping Fee Applies" }}
@@ -98,12 +105,6 @@
             bg-color="var(--main-blue)"
           />
         </div>
-        <router-link
-          to="/"
-          class="text-[1rem] 4k:text-[2rem] text-[var(--main-blue)] hover:underline"
-        >
-          Back to Store
-        </router-link>
       </div>
     </div>
   </section>
