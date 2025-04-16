@@ -64,7 +64,7 @@
               :key="color"
               class="w-6 h-6 rounded-full cursor-pointer"
               :class="{
-                'outline outline-2 outline-gray-400 outline-offset-1':
+                'outline-2 outline-gray-400 outline-offset-1':
                   selectedColor !== color,
                 'outline-4 outline-[var(--main-blue)] outline-offset-1':
                   selectedColor === color,
@@ -97,7 +97,7 @@
               <Plus />
             </button>
           </div>
-          <Button
+          <the-button
             text="Add To Cart"
             text-color="black"
             flair-color="white"
@@ -109,6 +109,7 @@
     </div>
   </section>
 </template>
+
 <script lang="ts" setup>
 import { computed, ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
@@ -116,7 +117,8 @@ import { useProductsStore } from "@/stores/products";
 import PageLoad from "@/components/PageLoad.vue";
 import { formatPrice } from "@/utils/priceFormat";
 import { Plus, Minus } from "lucide-vue-next";
-import Button from "@/components/Button.vue";
+import TheButton from "@/components/TheButton.vue";
+
 defineProps<{ id: string }>();
 const route = useRoute();
 const productsStore = useProductsStore();

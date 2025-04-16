@@ -21,8 +21,12 @@
                 link.name
               }}</RouterLink>
             </li>
-            <ShoppingCart class="custom_icon" />
-            <Search class="custom_icon" />
+            <span class="icon-wrapper">
+              <ShoppingCart class="custom_icon" @click="emitToggleCart" />
+            </span>
+            <span class="icon-wrapper">
+              <Search class="custom_icon" />
+            </span>
             <MenuIcon
               class="custom_icon block md:hidden"
               @click="toggleMenu"
@@ -43,16 +47,13 @@
             >
               <div class="flex justify-between items-center mb-40">
                 <li class="logo_brand">
-                  <RouterLink
-                    @click="toggleMenu"
-                    to="/"
-                    data-testid="mobile-logo"
+                  <RouterLink to="/" data-testid="mobile-logo"
                     >Furnishé</RouterLink
                   >
                 </li>
                 <X
                   @click="toggleMenu"
-                  :size="35"
+                  class="custom_icon"
                   data-testid="close-menu-icon"
                 />
               </div>
@@ -62,12 +63,9 @@
                   :key="link.path"
                   class="text-[3.5vh] z-40 uppercase mb-[1rem]"
                 >
-                  <RouterLink
-                    @click="toggleMenu"
-                    data-testid="mobile-nav-link"
-                    :to="link.path"
-                    >{{ link.name }}</RouterLink
-                  >
+                  <RouterLink data-testid="mobile-nav-link" :to="link.path">{{
+                    link.name
+                  }}</RouterLink>
                 </li>
               </div>
               <div class="mt-auto flex justify-center">
@@ -101,6 +99,8 @@ import {
   Github,
 } from "lucide-vue-next";
 import { useNavbarStore } from "@/stores/navbar";
+
+const emit = defineEmits(["toggle-cart"]);
 
 const route = useRoute();
 const navbarStore = useNavbarStore();
@@ -146,6 +146,10 @@ const toggleMenu = () => {
     });
   }
 };
+
+const emitToggleCart = () => {
+  emit("toggle-cart");
+};
 </script>
 
 <style scoped>
@@ -182,5 +186,15 @@ const toggleMenu = () => {
 .custom_icon {
   color: white;
   cursor: pointer;
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  visibility: visible;
+}
+
+.icon-wrapper {
+  display: inline-flex;
+  align-items: center;
 }
 </style>

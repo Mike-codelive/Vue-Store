@@ -144,7 +144,7 @@ import { animateTextOnScroll } from "@/utils/animatedText";
 import { formatPrice } from "@/utils/priceFormat";
 import { useProductsStore } from "@/stores/products";
 import { Plus, Minus } from "lucide-vue-next";
-import Button from "@/components/Button.vue";
+import Button from "@/components/TheButton.vue";
 import type { Product } from "@/types/product";
 
 const heading = ref<HTMLElement | null>(null);

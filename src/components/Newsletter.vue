@@ -18,7 +18,7 @@
           class="rounded-full bg-white outline-none pt-[1rem] pr-[1.2rem] pb-[0.8rem] pl-[1.2rem] mr-[5px] text-black border-none"
           placeholder="Email"
         />
-        <Button text="Join" />
+        <the-button text="Join" />
       </div>
     </div>
   </section>
@@ -27,7 +27,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import { animateTextOnScroll } from "@/utils/animatedText.ts";
-import Button from "@/components/Button.vue";
+import TheButton from "@/components/TheButton.vue";
 
 const heading = ref<HTMLElement | null>(null);
 const paragraph = ref<HTMLElement | null>(null);

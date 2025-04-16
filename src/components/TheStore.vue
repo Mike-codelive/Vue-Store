@@ -191,7 +191,7 @@ import PageLoad from "@/components/PageLoad.vue";
 import type { Product } from "@/types/product";
 import { formatPrice } from "@/utils/priceFormat";
 import { Plus, Minus } from "lucide-vue-next";
-import Button from "@/components/Button.vue";
+import Button from "@/components/TheButton.vue";
 
 const productsStore = useProductsStore();
 
