@@ -142,7 +142,7 @@
                   <button
                     @click="decrement(product.id)"
                     class="counter-btn bg-gray-200 text-[var(--main-blue)] hover:bg-gray-300 rounded-full cursor-pointer"
-                    :disabled="counters[product.id] === 1"
+                    :disabled="(counters[product.id] ?? 1) === 1"
                     aria-label="Decrement quantity"
                   >
                     <Minus />
@@ -150,7 +150,7 @@
                   <span
                     class="text-[1rem] font-semibold text-[var(--main-blue)] w-[1.5rem] text-center"
                   >
-                    {{ counters[product.id] }}
+                    {{ counters[product.id] ?? 1 }}
                   </span>
                   <button
                     @click="increment(product.id)"
@@ -199,6 +199,8 @@ onMounted(() => {
   if (!productsStore.products.length) {
     productsStore.fetchProducts();
   }
+  // Initialize counters for any existing products
+  initializeCounters();
 });
 
 const displayedAllProducts = computed<Product[]>(() => {
@@ -265,8 +267,15 @@ const filteredProducts = computed<Product[]>(() => {
 });
 
 const counters = reactive<Record<string, number>>({});
-
 const selectedProductColors = reactive<Record<string, string>>({});
+
+const initializeCounters = () => {
+  displayedAllProducts.value.forEach((product) => {
+    if (!(product.id in counters)) {
+      counters[product.id] = 1;
+    }
+  });
+};
 
 watch(displayedAllProducts, (newProducts) => {
   newProducts.forEach((product) => {
@@ -286,10 +295,16 @@ const selectProductColor = (productId: string, color: string) => {
 };
 
 const increment = (productId: string): void => {
+  if (!(productId in counters)) {
+    counters[productId] = 1;
+  }
   counters[productId]++;
 };
 
 const decrement = (productId: string): void => {
+  if (!(productId in counters)) {
+    counters[productId] = 1;
+  }
   if (counters[productId] > 1) {
     counters[productId]--;
   }

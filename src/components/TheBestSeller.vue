@@ -102,7 +102,7 @@
                   <button
                     @click="decrement(product.id)"
                     class="counter-btn bg-gray-200 text-[var(--main-blue)] hover:bg-gray-300 rounded-full cursor-pointer"
-                    :disabled="counters[product.id] === 1"
+                    :disabled="(counters[product.id] ?? 1) === 1"
                     aria-label="Decrement quantity"
                   >
                     <Minus />
@@ -110,7 +110,7 @@
                   <span
                     class="text-[1rem] font-semibold text-[var(--main-blue)] w-[1.5rem] text-center"
                   >
-                    {{ counters[product.id] }}
+                    {{ counters[product.id] ?? 1 }}
                   </span>
                   <button
                     @click="increment(product.id)"
@@ -158,6 +158,15 @@ const displayedFeaturedProducts = computed<Product[]>(() => {
 
 const counters = reactive<Record<string, number>>({});
 
+// Initialize counters for all featured products
+const initializeCounters = () => {
+  displayedFeaturedProducts.value.forEach((product) => {
+    if (!(product.id in counters)) {
+      counters[product.id] = 1;
+    }
+  });
+};
+
 watch(displayedFeaturedProducts, (newProducts) => {
   newProducts.forEach((product) => {
     if (!(product.id in counters)) {
@@ -167,10 +176,18 @@ watch(displayedFeaturedProducts, (newProducts) => {
 });
 
 const increment = (productId: string): void => {
+  // Ensure the counter is initialized
+  if (!(productId in counters)) {
+    counters[productId] = 1;
+  }
   counters[productId]++;
 };
 
 const decrement = (productId: string): void => {
+  // Ensure the counter is initialized
+  if (!(productId in counters)) {
+    counters[productId] = 1;
+  }
   if (counters[productId] > 1) {
     counters[productId]--;
   }
@@ -182,6 +199,8 @@ onMounted(() => {
   if (!productsStore.products.length) {
     productsStore.fetchProducts();
   }
+  // Initialize counters for any existing products
+  initializeCounters();
 });
 </script>
 
