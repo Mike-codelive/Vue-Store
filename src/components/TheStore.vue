@@ -199,8 +199,8 @@ onMounted(() => {
   if (!productsStore.products.length) {
     productsStore.fetchProducts();
   }
-  // Initialize counters for any existing products
   initializeCounters();
+  initializeSelectedColors();
 });
 
 const displayedAllProducts = computed<Product[]>(() => {
@@ -273,6 +273,16 @@ const initializeCounters = () => {
   displayedAllProducts.value.forEach((product) => {
     if (!(product.id in counters)) {
       counters[product.id] = 1;
+    }
+  });
+};
+
+const initializeSelectedColors = () => {
+  displayedAllProducts.value.forEach((product) => {
+    if (!(product.id in selectedProductColors) && product.colors) {
+      selectedProductColors[product.id] = Array.isArray(product.colors)
+        ? product.colors[0]
+        : product.colors;
     }
   });
 };

@@ -94,6 +94,23 @@
               >
                 {{ product.name }}
               </h3>
+              <div class="flex gap-2 mb-2">
+                <button
+                  v-for="color in Array.isArray(product.colors)
+                    ? product.colors
+                    : [product.colors]"
+                  :key="color"
+                  class="w-6 h-6 rounded-full border-2"
+                  :class="{
+                    'border-gray-400':
+                      selectedProductColors[product.id] !== color,
+                    'border-[var(--main-blue)]':
+                      selectedProductColors[product.id] === color,
+                  }"
+                  :style="{ backgroundColor: color }"
+                  @click="selectProductColor(product.id, color)"
+                ></button>
+              </div>
               <div class="flex justify-between items-center mb-[.5rem]">
                 <p class="text-[1rem] text-gray-600">
                   {{ formatPrice(product.price) }}
@@ -157,12 +174,22 @@ const displayedFeaturedProducts = computed<Product[]>(() => {
 });
 
 const counters = reactive<Record<string, number>>({});
+const selectedProductColors = reactive<Record<string, string>>({});
 
-// Initialize counters for all featured products
 const initializeCounters = () => {
   displayedFeaturedProducts.value.forEach((product) => {
     if (!(product.id in counters)) {
       counters[product.id] = 1;
+    }
+  });
+};
+
+const initializeSelectedColors = () => {
+  displayedFeaturedProducts.value.forEach((product) => {
+    if (!(product.id in selectedProductColors) && product.colors) {
+      selectedProductColors[product.id] = Array.isArray(product.colors)
+        ? product.colors[0]
+        : product.colors;
     }
   });
 };
@@ -172,11 +199,19 @@ watch(displayedFeaturedProducts, (newProducts) => {
     if (!(product.id in counters)) {
       counters[product.id] = 1;
     }
+    if (!(product.id in selectedProductColors) && product.colors) {
+      selectedProductColors[product.id] = Array.isArray(product.colors)
+        ? product.colors[0]
+        : product.colors;
+    }
   });
 });
 
+const selectProductColor = (productId: string, color: string) => {
+  selectedProductColors[productId] = color;
+};
+
 const increment = (productId: string): void => {
-  // Ensure the counter is initialized
   if (!(productId in counters)) {
     counters[productId] = 1;
   }
@@ -184,7 +219,6 @@ const increment = (productId: string): void => {
 };
 
 const decrement = (productId: string): void => {
-  // Ensure the counter is initialized
   if (!(productId in counters)) {
     counters[productId] = 1;
   }
@@ -199,8 +233,8 @@ onMounted(() => {
   if (!productsStore.products.length) {
     productsStore.fetchProducts();
   }
-  // Initialize counters for any existing products
   initializeCounters();
+  initializeSelectedColors();
 });
 </script>
 
