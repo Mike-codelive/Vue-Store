@@ -162,12 +162,13 @@
                 </div>
               </div>
               <div class="text-center">
-                <Button
+                <the-button
                   text="Add To Cart"
                   text-color="black"
                   flair-color="white"
                   border-color="var(--main-blue)"
                   bg-color="var(--main-blue)"
+                  @click="addToCart(product.id)"
                 />
               </div>
             </div>
@@ -187,13 +188,17 @@
 <script lang="ts" setup>
 import { ref, computed, reactive, watch, onMounted } from "vue";
 import { useProductsStore } from "@/stores/products";
+import { useCartStore } from "@/stores/cart";
 import PageLoad from "@/components/PageLoad.vue";
 import type { Product } from "@/types/product";
 import { formatPrice } from "@/utils/priceFormat";
 import { Plus, Minus } from "lucide-vue-next";
-import Button from "@/components/TheButton.vue";
+import TheButton from "@/components/TheButton.vue";
+import { useUiStore } from "@/stores/ui";
 
 const productsStore = useProductsStore();
+const cartStore = useCartStore();
+const uiStore = useUiStore();
 
 onMounted(() => {
   if (!productsStore.products.length) {
@@ -260,9 +265,7 @@ const filteredProducts = computed<Product[]>(() => {
       !selectedCategory.value ||
       (product.category && product.category === selectedCategory.value);
 
-    const passesFilter = withinPriceRange && matchesColor && matchesCategory;
-
-    return passesFilter;
+    return withinPriceRange && matchesColor && matchesCategory;
   });
 });
 
@@ -317,6 +320,18 @@ const decrement = (productId: string): void => {
   }
   if (counters[productId] > 1) {
     counters[productId]--;
+  }
+};
+
+const addToCart = (productId: string): void => {
+  try {
+    const quantity = counters[productId] ?? 1;
+    const selectedColor = selectedProductColors[productId];
+    cartStore.addItem(productId, quantity, selectedColor);
+    counters[productId] = 1;
+    uiStore.openCart();
+  } catch (error) {
+    console.error("TheStore: Add to cart error:", (error as Error).message);
   }
 };
 </script>

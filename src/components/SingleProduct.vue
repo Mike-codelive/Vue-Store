@@ -103,6 +103,7 @@
             flair-color="white"
             border-color="var(--main-blue)"
             bg-color="var(--main-blue)"
+            @click="addToCart"
           />
         </div>
       </div>
@@ -114,6 +115,8 @@
 import { computed, ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useProductsStore } from "@/stores/products";
+import { useCartStore } from "@/stores/cart";
+import { useUiStore } from "@/stores/ui";
 import PageLoad from "@/components/PageLoad.vue";
 import { formatPrice } from "@/utils/priceFormat";
 import { Plus, Minus } from "lucide-vue-next";
@@ -122,17 +125,23 @@ import TheButton from "@/components/TheButton.vue";
 defineProps<{ id: string }>();
 const route = useRoute();
 const productsStore = useProductsStore();
+const cartStore = useCartStore();
+const uiStore = useUiStore();
+
 const productId = computed(() => route.params.id as string);
 const product = computed(() => {
   return productsStore.singleProduct;
 });
+
 onMounted(() => {
   if (productId.value) {
     productsStore.fetchSingleProduct(productId.value);
   }
 });
+
 const counter = ref(1);
 const selectedColor = ref<string>("");
+
 watch(product, (newProduct) => {
   if (newProduct && newProduct.colors) {
     selectedColor.value = Array.isArray(newProduct.colors)
@@ -140,12 +149,35 @@ watch(product, (newProduct) => {
       : newProduct.colors;
   }
 });
+
 const increment = () => {
   counter.value++;
 };
+
 const decrement = () => {
   if (counter.value > 1) {
     counter.value--;
+  }
+};
+
+const addToCart = () => {
+  try {
+    if (!product.value) {
+      throw new Error("Product not loaded");
+    }
+    const quantity = counter.value;
+    const color = selectedColor.value;
+    if (!color) {
+      throw new Error("Please select a color");
+    }
+    cartStore.addItem(product.value.id, quantity, color);
+    counter.value = 1;
+    uiStore.openCart();
+  } catch (error) {
+    console.error(
+      "SingleProduct: Add to cart error:",
+      (error as Error).message
+    );
   }
 };
 </script>

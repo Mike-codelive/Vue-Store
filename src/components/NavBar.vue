@@ -21,8 +21,15 @@
                 link.name
               }}</RouterLink>
             </li>
-            <span class="icon-wrapper">
+            <span class="icon-wrapper relative">
               <ShoppingCart class="custom_icon" @click="emitToggleCart" />
+              <span
+                v-if="cartStore.totalItems > 0"
+                class="cart-badge"
+                data-testid="cart-badge"
+              >
+                {{ cartStore.totalItems }}
+              </span>
             </span>
             <span class="icon-wrapper">
               <Search class="custom_icon" />
@@ -87,6 +94,7 @@
 <script lang="ts" setup>
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
+import { useCartStore } from "@/stores/cart";
 import gsap from "gsap";
 import {
   ShoppingCart,
@@ -104,6 +112,7 @@ const emit = defineEmits(["toggle-cart"]);
 
 const route = useRoute();
 const navbarStore = useNavbarStore();
+const cartStore = useCartStore();
 const isMenuOpen = ref(false);
 const linkList = [
   { name: "store", path: "/store" },
@@ -196,5 +205,22 @@ const emitToggleCart = () => {
 .icon-wrapper {
   display: inline-flex;
   align-items: center;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: var(--main-blue);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
 }
 </style>

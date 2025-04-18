@@ -1,7 +1,7 @@
 <template>
   <section>
-    <nav-bar @toggle-cart="toggleCartDrawer" />
-    <the-cart-drawer :is-open="isCartDrawerOpen" @close="closeCartDrawer" />
+    <nav-bar @toggle-cart="uiStore.toggleCart" />
+    <the-cart-drawer :is-open="uiStore.isCartOpen" @close="uiStore.closeCart" />
     <router-view />
     <newsletter />
     <the-footer />
@@ -9,19 +9,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { useUiStore } from "@/stores/ui";
 import NavBar from "@/components/NavBar.vue";
 import Newsletter from "@/components/Newsletter.vue";
 import TheFooter from "@/components/TheFooter.vue";
 import TheCartDrawer from "@/components/TheCartDrawer.vue";
 
-const isCartDrawerOpen = ref(false);
-
-const toggleCartDrawer = () => {
-  isCartDrawerOpen.value = !isCartDrawerOpen.value;
-};
-
-const closeCartDrawer = () => {
-  isCartDrawerOpen.value = false;
-};
+const uiStore = useUiStore();
 </script>

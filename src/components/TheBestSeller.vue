@@ -139,12 +139,13 @@
                 </div>
               </div>
               <div class="text-center">
-                <Button
+                <the-button
                   text="Add To Cart"
                   text-color="black"
                   flair-color="white"
                   border-color="var(--main-blue)"
                   bg-color="var(--main-blue)"
+                  @click="addToCart(product.id)"
                 />
               </div>
             </div>
@@ -160,14 +161,18 @@ import { onMounted, ref, computed, reactive, watch } from "vue";
 import { animateTextOnScroll } from "@/utils/animatedText";
 import { formatPrice } from "@/utils/priceFormat";
 import { useProductsStore } from "@/stores/products";
+import { useCartStore } from "@/stores/cart";
 import { Plus, Minus } from "lucide-vue-next";
-import Button from "@/components/TheButton.vue";
+import TheButton from "@/components/TheButton.vue";
 import type { Product } from "@/types/product";
+import { useUiStore } from "@/stores/ui";
 
 const heading = ref<HTMLElement | null>(null);
 const paragraph = ref<HTMLElement | null>(null);
 
 const productsStore = useProductsStore();
+const cartStore = useCartStore();
+const uiStore = useUiStore();
 
 const displayedFeaturedProducts = computed<Product[]>(() => {
   return productsStore.featuredProducts.slice(0, 3);
@@ -227,9 +232,23 @@ const decrement = (productId: string): void => {
   }
 };
 
+const addToCart = (productId: string): void => {
+  try {
+    const quantity = counters[productId] ?? 1;
+    const selectedColor = selectedProductColors[productId];
+    cartStore.addItem(productId, quantity, selectedColor);
+    counters[productId] = 1;
+    uiStore.openCart();
+  } catch (error) {
+    console.error(
+      "TheBestSeller: Add to cart error:",
+      (error as Error).message
+    );
+  }
+};
+
 onMounted(() => {
   animateTextOnScroll([heading.value, paragraph.value]);
-
   if (!productsStore.products.length) {
     productsStore.fetchProducts();
   }
