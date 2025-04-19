@@ -3,7 +3,7 @@
     <div class="backdrop" ref="backdrop" @click="closeDrawer"></div>
     <section
       ref="drawer"
-      class="w-[560px] h-full fixed right-0 top-0 z-[20001] bg-[#fff] p-[2rem] flex flex-col transform translate-x-full"
+      class="w-full md:w-[560px] h-full fixed right-0 top-0 z-[20001] bg-[#fff] p-[2rem] flex flex-col transform translate-x-full"
     >
       <div
         class="flex w-full justify-between items-center pb-[1.5rem] mb-[2rem] border-b-2 border-solid border-[var(--main-blue)]"

@@ -2,6 +2,7 @@
   <section>
     <header>
       <nav
+        ref="navBar"
         :class="[
           'fixed top-0 left-0 z-40 px-[4vw] w-full transition-colors duration-300 h-[100px]',
           { 'bg-[var(--main-blue)]': shouldHaveBlueBackground },
@@ -32,7 +33,7 @@
               </span>
             </span>
             <span class="icon-wrapper">
-              <Search class="custom_icon" />
+              <Search class="custom_icon" @click="toggleSearch" />
             </span>
             <MenuIcon
               class="custom_icon block md:hidden"
@@ -87,12 +88,25 @@
           </ul>
         </div>
       </nav>
+      <div
+        ref="searchBar"
+        class="search-bar fixed top-[100px] left-0 w-full bg-white shadow-md z-40 pl-[3rem] pr-[3rem] flex items-center overflow-hidden"
+      >
+        <input
+          type="text"
+          placeholder="Search products..."
+          class="flex-1 h-full outline-none text-[1rem] text-gray-800 placeholder-gray-400"
+        />
+        <button @click="toggleSearch" aria-label="Close search">
+          <X class="w-6 h-6 text-[var(--main-blue)] cursor-pointer" />
+        </button>
+      </div>
     </header>
   </section>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useCartStore } from "@/stores/cart";
 import gsap from "gsap";
@@ -114,11 +128,16 @@ const route = useRoute();
 const navbarStore = useNavbarStore();
 const cartStore = useCartStore();
 const isMenuOpen = ref(false);
+const isSearchOpen = ref(false);
+const searchBar = ref<HTMLElement | null>(null);
+const navBar = ref<HTMLElement | null>(null);
 const linkList = [
   { name: "store", path: "/store" },
   { name: "about", path: "/about" },
   { name: "contact", path: "/contact" },
 ];
+
+let originalScrollState = false;
 
 const blueBackgroundRoutes = ["/about", "/store", "/contact", "/product"];
 
@@ -129,6 +148,42 @@ const shouldHaveBlueBackground = computed(() => {
   }
   return blueBackgroundRoutes.includes(route.path) || isProductRoute;
 });
+
+onMounted(() => {
+  if (searchBar.value) {
+    gsap.set(searchBar.value, { height: 0 });
+  }
+});
+
+const toggleSearch = () => {
+  if (isSearchOpen.value) {
+    isSearchOpen.value = false;
+    if (searchBar.value) {
+      gsap.to(searchBar.value, {
+        height: 0,
+        paddingTop: 0,
+        paddingBottom: 0,
+        duration: 0.5,
+        ease: "power2.in",
+        onComplete: () => {
+          gsap.set(searchBar.value, { clearProps: "height" });
+        },
+      });
+    }
+    navbarStore.isScrolledPastHero = originalScrollState;
+  } else {
+    originalScrollState = navbarStore.isScrolledPastHero;
+    navbarStore.isScrolledPastHero = true;
+    isSearchOpen.value = true;
+    if (searchBar.value) {
+      gsap.to(searchBar.value, {
+        height: "83px",
+        duration: 0.5,
+        ease: "power2.out",
+      });
+    }
+  }
+};
 
 const toggleMenu = () => {
   const navMenu = document.querySelector("#mobile_menu");
@@ -222,5 +277,13 @@ const emitToggleCart = () => {
   align-items: center;
   justify-content: center;
   border: 2px solid white;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 0;
+  transition: background-color 0.3s ease;
 }
 </style>
