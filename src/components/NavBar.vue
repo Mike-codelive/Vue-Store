@@ -89,6 +89,11 @@
         </div>
       </nav>
       <div
+        ref="backdrop"
+        class="backdrop fixed inset-0 bg-black bg-opacity-50 z-30"
+        v-show="isSearchOpen"
+      ></div>
+      <div
         ref="searchBar"
         class="search-bar fixed top-[100px] left-0 w-full bg-white shadow-md z-40 pl-[3rem] pr-[3rem] flex items-center overflow-hidden"
       >
@@ -106,7 +111,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { useCartStore } from "@/stores/cart";
 import gsap from "gsap";
@@ -131,6 +136,7 @@ const isMenuOpen = ref(false);
 const isSearchOpen = ref(false);
 const searchBar = ref<HTMLElement | null>(null);
 const navBar = ref<HTMLElement | null>(null);
+const backdrop = ref<HTMLElement | null>(null);
 const linkList = [
   { name: "store", path: "/store" },
   { name: "about", path: "/about" },
@@ -138,6 +144,7 @@ const linkList = [
 ];
 
 let originalScrollState = false;
+let originalOverflow = "";
 
 const blueBackgroundRoutes = ["/about", "/store", "/contact", "/product"];
 
@@ -153,10 +160,19 @@ onMounted(() => {
   if (searchBar.value) {
     gsap.set(searchBar.value, { height: 0 });
   }
+  if (backdrop.value) {
+    gsap.set(backdrop.value, { opacity: 0 });
+  }
+});
+
+onUnmounted(() => {
+  // Restore body overflow on component destroy
+  document.body.style.overflow = originalOverflow;
 });
 
 const toggleSearch = () => {
   if (isSearchOpen.value) {
+    // Close: animate search bar and backdrop, restore scroll
     isSearchOpen.value = false;
     if (searchBar.value) {
       gsap.to(searchBar.value, {
@@ -170,14 +186,32 @@ const toggleSearch = () => {
         },
       });
     }
+    if (backdrop.value) {
+      gsap.to(backdrop.value, {
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.in",
+      });
+    }
     navbarStore.isScrolledPastHero = originalScrollState;
+    document.body.style.overflow = originalOverflow;
   } else {
+    // Open: store states, animate search bar and backdrop, disable scroll
     originalScrollState = navbarStore.isScrolledPastHero;
+    originalOverflow = document.body.style.overflow || "";
     navbarStore.isScrolledPastHero = true;
+    document.body.style.overflow = "hidden";
     isSearchOpen.value = true;
     if (searchBar.value) {
       gsap.to(searchBar.value, {
         height: "83px",
+        duration: 0.5,
+        ease: "power2.out",
+      });
+    }
+    if (backdrop.value) {
+      gsap.to(backdrop.value, {
+        opacity: 0.5,
         duration: 0.5,
         ease: "power2.out",
       });
@@ -285,5 +319,10 @@ const emitToggleCart = () => {
   gap: 1rem;
   height: 0;
   transition: background-color 0.3s ease;
+}
+
+.backdrop {
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 </style>
