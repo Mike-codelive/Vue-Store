@@ -98,9 +98,12 @@
         class="search-bar fixed top-[100px] left-0 w-full bg-white shadow-md z-40 pl-[3rem] pr-[3rem] flex items-center overflow-hidden"
       >
         <input
+          ref="searchInput"
+          v-model="searchQuery"
           type="text"
           placeholder="Search products..."
           class="flex-1 h-full outline-none text-[1rem] text-gray-800 placeholder-gray-400"
+          @keydown.enter="handleSearch"
         />
         <button @click="toggleSearch" aria-label="Close search">
           <X class="w-6 h-6 text-[var(--main-blue)] cursor-pointer" />
@@ -111,8 +114,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
-import { useRoute } from "vue-router";
+import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useCartStore } from "@/stores/cart";
 import gsap from "gsap";
 import {
@@ -130,11 +133,14 @@ import { useNavbarStore } from "@/stores/navbar";
 const emit = defineEmits(["toggle-cart"]);
 
 const route = useRoute();
+const router = useRouter();
 const navbarStore = useNavbarStore();
 const cartStore = useCartStore();
 const isMenuOpen = ref(false);
 const isSearchOpen = ref(false);
+const searchQuery = ref("");
 const searchBar = ref<HTMLElement | null>(null);
+const searchInput = ref<HTMLInputElement | null>(null);
 const navBar = ref<HTMLElement | null>(null);
 const backdrop = ref<HTMLElement | null>(null);
 const linkList = [
@@ -146,7 +152,13 @@ const linkList = [
 let originalScrollState = false;
 let originalOverflow = "";
 
-const blueBackgroundRoutes = ["/about", "/store", "/contact", "/product"];
+const blueBackgroundRoutes = [
+  "/about",
+  "/store",
+  "/contact",
+  "/product",
+  "/search",
+];
 
 const shouldHaveBlueBackground = computed(() => {
   const isProductRoute = route.path.startsWith("/product/");
@@ -166,13 +178,11 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  // Restore body overflow on component destroy
   document.body.style.overflow = originalOverflow;
 });
 
 const toggleSearch = () => {
   if (isSearchOpen.value) {
-    // Close: animate search bar and backdrop, restore scroll
     isSearchOpen.value = false;
     if (searchBar.value) {
       gsap.to(searchBar.value, {
@@ -196,26 +206,41 @@ const toggleSearch = () => {
     navbarStore.isScrolledPastHero = originalScrollState;
     document.body.style.overflow = originalOverflow;
   } else {
-    // Open: store states, animate search bar and backdrop, disable scroll
     originalScrollState = navbarStore.isScrolledPastHero;
     originalOverflow = document.body.style.overflow || "";
     navbarStore.isScrolledPastHero = true;
     document.body.style.overflow = "hidden";
-    isSearchOpen.value = true;
-    if (searchBar.value) {
-      gsap.to(searchBar.value, {
-        height: "83px",
-        duration: 0.5,
-        ease: "power2.out",
-      });
-    }
-    if (backdrop.value) {
-      gsap.to(backdrop.value, {
-        opacity: 0.5,
-        duration: 0.5,
-        ease: "power2.out",
-      });
-    }
+    nextTick(() => {
+      isSearchOpen.value = true;
+      if (searchBar.value) {
+        gsap.to(searchBar.value, {
+          height: "83px",
+          duration: 0.5,
+          ease: "power2.out",
+          onComplete: () => {
+            searchInput.value?.focus();
+          },
+        });
+      }
+      if (backdrop.value) {
+        gsap.to(backdrop.value, {
+          opacity: 0.5,
+          duration: 0.5,
+          ease: "power2.out",
+        });
+      }
+    });
+  }
+};
+
+const handleSearch = () => {
+  if (searchQuery.value.trim()) {
+    router.push({
+      path: "/search",
+      query: { query: searchQuery.value.trim() },
+    });
+    toggleSearch();
+    searchQuery.value = "";
   }
 };
 

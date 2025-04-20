@@ -5,6 +5,7 @@ import StoreView from "@/views/StoreView.vue";
 import AboutView from "@/views/AboutView.vue";
 import ContactView from "@/views/ContactView.vue";
 import ProductView from "@/views/ProductView.vue";
+import SearchView from "@/views/SearchView.vue";
 
 const routes = [
   {
@@ -32,6 +33,11 @@ const routes = [
     name: "SingleProduct",
     component: ProductView,
     props: true,
+  },
+  {
+    path: "/search",
+    name: "search",
+    component: SearchView,
   },
 ];
 
